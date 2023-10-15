@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="Hero" load_steps=14 format=3 uid="uid://shpqtkqjqltr"]
+
+[ext_resource type="Script" path="res://heroes/Hero.cs" id="1_7ksif"]
+[ext_resource type="Script" path="res://actions/ActionFortify.cs" id="1_lg5va"]
+[ext_resource type="Script" path="res://actions/ActionAttack.cs" id="2_u7yil"]
+[ext_resource type="Script" path="res://heroes/HeroLevel.cs" id="3_7i3sx"]
+
+[sub_resource type="Resource" id="Resource_6ejsn"]
+script = ExtResource("1_lg5va")
+Amount = 2
+
+[sub_resource type="Resource" id="Resource_cpufs"]
+script = ExtResource("2_u7yil")
+Height = 1
+CrownPower = 1
+BulwarkPower = 3
+
+[sub_resource type="Resource" id="Resource_8u447"]
+script = ExtResource("3_7i3sx")
+EnergyNeeded = 4
+Priority = 0
+ImmuneTo = PackedStringArray()
+Actions = Array[Object]([SubResource("Resource_6ejsn"), SubResource("Resource_cpufs")])
+
+[sub_resource type="Resource" id="Resource_ospon"]
+script = ExtResource("1_lg5va")
+Amount = 2
+
+[sub_resource type="Resource" id="Resource_bw30f"]
+script = ExtResource("2_u7yil")
+Height = 1
+CrownPower = 2
+BulwarkPower = 5
+
+[sub_resource type="Resource" id="Resource_kwuvl"]
+script = ExtResource("3_7i3sx")
+EnergyNeeded = 4
+Priority = 0
+ImmuneTo = PackedStringArray()
+Actions = Array[Object]([SubResource("Resource_ospon"), SubResource("Resource_bw30f")])
+
+[sub_resource type="Resource" id="Resource_m7dvy"]
+script = ExtResource("1_lg5va")
+Amount = 2
+
+[sub_resource type="Resource" id="Resource_sb388"]
+script = ExtResource("2_u7yil")
+Height = 1
+CrownPower = 4
+BulwarkPower = 5
+
+[sub_resource type="Resource" id="Resource_im0nb"]
+script = ExtResource("3_7i3sx")
+EnergyNeeded = 3
+Priority = 0
+ImmuneTo = PackedStringArray()
+Actions = Array[Object]([SubResource("Resource_m7dvy"), SubResource("Resource_sb388")])
+
+[resource]
+script = ExtResource("1_7ksif")
+Levels = Array[Object]([SubResource("Resource_8u447"), SubResource("Resource_kwuvl"), SubResource("Resource_im0nb")])

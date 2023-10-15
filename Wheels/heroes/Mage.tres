@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="Hero" load_steps=13 format=3 uid="uid://787drfpf0lwd"]
+
+[ext_resource type="Script" path="res://heroes/Hero.cs" id="1_fwanx"]
+[ext_resource type="Script" path="res://actions/ActionAttack.cs" id="1_jtbhr"]
+[ext_resource type="Script" path="res://heroes/HeroLevel.cs" id="2_gmo2e"]
+
+[sub_resource type="Resource" id="Resource_iphwf"]
+script = ExtResource("1_jtbhr")
+Height = 1
+CrownPower = 2
+BulwarkPower = 2
+
+[sub_resource type="Resource" id="Resource_elau3"]
+script = ExtResource("1_jtbhr")
+Height = 6
+CrownPower = 2
+BulwarkPower = 2
+
+[sub_resource type="Resource" id="Resource_77n0l"]
+script = ExtResource("2_gmo2e")
+EnergyNeeded = 5
+Priority = 0
+ImmuneTo = PackedStringArray()
+Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_iphwf"), SubResource("Resource_elau3")])
+
+[sub_resource type="Resource" id="Resource_v3k8c"]
+script = ExtResource("1_jtbhr")
+Height = 1
+CrownPower = 3
+BulwarkPower = 3
+
+[sub_resource type="Resource" id="Resource_yds45"]
+script = ExtResource("1_jtbhr")
+Height = 6
+CrownPower = 3
+BulwarkPower = 3
+
+[sub_resource type="Resource" id="Resource_uuyq8"]
+script = ExtResource("2_gmo2e")
+EnergyNeeded = 4
+Priority = 0
+ImmuneTo = PackedStringArray()
+Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_v3k8c"), SubResource("Resource_yds45")])
+
+[sub_resource type="Resource" id="Resource_cy2kl"]
+script = ExtResource("1_jtbhr")
+Height = 1
+CrownPower = 3
+BulwarkPower = 5
+
+[sub_resource type="Resource" id="Resource_uie7h"]
+script = ExtResource("1_jtbhr")
+Height = 6
+CrownPower = 3
+BulwarkPower = 5
+
+[sub_resource type="Resource" id="Resource_mlbjy"]
+script = ExtResource("2_gmo2e")
+EnergyNeeded = 4
+Priority = 0
+ImmuneTo = PackedStringArray()
+Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_cy2kl"), SubResource("Resource_uie7h")])
+
+[resource]
+script = ExtResource("1_fwanx")
+Levels = [SubResource("Resource_77n0l"), SubResource("Resource_uuyq8"), SubResource("Resource_mlbjy")]

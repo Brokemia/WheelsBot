@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="Wheel" load_steps=11 format=3 uid="uid://utspi0hb45aa"]
+
+[ext_resource type="Script" path="res://wheels/Symbol.cs" id="1_54656"]
+[ext_resource type="Script" path="res://wheels/Wheel.cs" id="1_ie311"]
+
+[sub_resource type="Resource" id="Resource_oxa8d"]
+script = ExtResource("1_54656")
+Type = 4
+Amount = 2
+
+[sub_resource type="Resource" id="Resource_ggfvj"]
+script = ExtResource("1_54656")
+Type = 1
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_5w2pa"]
+script = ExtResource("1_54656")
+Type = 2
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_ckd53"]
+script = ExtResource("1_54656")
+Type = 3
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_27vok"]
+script = ExtResource("1_54656")
+Type = 0
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_dspp8"]
+script = ExtResource("1_54656")
+Type = 2
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_1krpd"]
+script = ExtResource("1_54656")
+Type = 4
+Amount = 2
+
+[sub_resource type="Resource" id="Resource_ybwgb"]
+script = ExtResource("1_54656")
+Type = 0
+Amount = 2
+
+[resource]
+script = ExtResource("1_ie311")
+Symbols = [SubResource("Resource_oxa8d"), SubResource("Resource_ggfvj"), SubResource("Resource_5w2pa"), SubResource("Resource_ckd53"), SubResource("Resource_27vok"), SubResource("Resource_dspp8"), SubResource("Resource_1krpd"), SubResource("Resource_ybwgb")]
