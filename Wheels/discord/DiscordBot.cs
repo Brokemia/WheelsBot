@@ -350,7 +350,7 @@ namespace WheelsGodot
                     ephemeral: true));
                 return;
             }
-            var ruleset = GD.Load<Rules>((command.Data.Options.FirstOrDefault(o => o.Name == "ruleset")?.Value ?? "default") as string);
+            var ruleset = GD.Load<Rules>($"res://rulesets/{(command.Data.Options.FirstOrDefault(o => o.Name == "ruleset")?.Value ?? "default") as string}.tres");
             if (ruleset == null) {
                 await CatchAndContinue(async () => await command.RespondAsync(
                     embed: new EmbedBuilder()
