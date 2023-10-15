@@ -54,6 +54,14 @@ namespace WheelsGodot
             await client.StartAsync();
         }
 
+        private async Task CatchAndContinue(Func<Task> action) {
+            try {
+                await action();
+            } catch (Exception e) {
+                GD.Print(e.ToString());
+            }
+        }
+
         private Task Client_Log(LogMessage arg) {
             GD.Print(arg.Message.ToString());
             if (arg.Exception != null) {
@@ -146,8 +154,8 @@ namespace WheelsGodot
             var invite = inviteIfCancel[user.Id];
             inviteIfCancel.Remove(user.Id);
             if (ongoingGames.TryGetValue(user.Id, out DiscordMatch existingGame)) {
-                await existingGame.EnemyUser.SendMessageAsync(embed: new EmbedBuilder()
-                    .WithDescription($"{user.Mention} has cancelled the game").Build());
+                await CatchAndContinue(async() => await existingGame.EnemyUser.SendMessageAsync(embed: new EmbedBuilder()
+                    .WithDescription($"{user.Mention} has cancelled the game").Build()));
             }
 
             InitGame(user, invite, component);
@@ -155,9 +163,9 @@ namespace WheelsGodot
             var embed = new EmbedBuilder()
                 .WithDescription($"Previous game cancelled.\nWaiting for {invite.Mention} to accept using the /accept command");
 
-            await component.RespondAsync(embed: embed.Build(), ephemeral: true);
-            await invite.SendMessageAsync(embed: new EmbedBuilder()
-                .WithDescription($"You have been challenged to a game of Wheels by {user.Mention}! Use the /accept command in a channel of your choice to accept the challenge.").Build());
+            await CatchAndContinue(async() => await component.RespondAsync(embed: embed.Build(), ephemeral: true));
+            await CatchAndContinue(async() => await invite.SendMessageAsync(embed: new EmbedBuilder()
+                .WithDescription($"You have been challenged to a game of Wheels by {user.Mention}! Use the /accept command in a channel of your choice to accept the challenge.").Build()));
         }
 
         private async Task HandleSpin(SocketMessageComponent component) {
@@ -165,8 +173,8 @@ namespace WheelsGodot
             var board = game.Board;
             var finalSpin = controller.Spin(game.Self);
 
-            await RemovePreviousComponents(component);
-            await component.FollowupAsync(SpinResultDisplay(game.Self), components: finalSpin ? null : BuildSpinterface(game.Self), ephemeral: true);
+            await CatchAndContinue(async () => await RemovePreviousComponents(component));
+            await CatchAndContinue(async () => await component.FollowupAsync(SpinResultDisplay(game.Self), components: finalSpin ? null : BuildSpinterface(game.Self), ephemeral: true));
 
             if (!finalSpin) {
                 return;
@@ -176,7 +184,7 @@ namespace WheelsGodot
             if (!game.OpponentReady) {
                 ongoingGames[game.EnemyUser.Id].OpponentReady = true;
                 ongoingGames[game.EnemyUser.Id].LastInteraction = component;
-                await component.FollowupAsync(embed: new EmbedBuilder().WithDescription("Waiting for opponent to finish spinning").Build(), ephemeral: true);
+                await CatchAndContinue(async () => await component.FollowupAsync(embed: new EmbedBuilder().WithDescription("Waiting for opponent to finish spinning").Build(), ephemeral: true));
                 return;
             }
             game.OpponentReady = false;
@@ -209,18 +217,18 @@ namespace WheelsGodot
                     .WithStyle(ButtonStyle.Primary)
             );
 
-            await component.FollowupAsync(embed: embed.Build());
+            await CatchAndContinue(async () => await component.FollowupAsync(embed: embed.Build()));
             if (component.ChannelId != game.LastInteraction.ChannelId) {
-                await game.LastInteraction.FollowupAsync(embed: embed.Build());
+                await CatchAndContinue(async () => await game.LastInteraction.FollowupAsync(embed: embed.Build()));
             }
 
             var enemySpinEmbed = new EmbedBuilder()
                 .WithDescription($"{enemyPlayer.PlayerName}'s Spin");
-            await component.FollowupAsync(SpinResultDisplay(game.Enemy, false), embed: enemySpinEmbed.Build(), components: components?.Build(), ephemeral: true);
+            await CatchAndContinue(async () => await component.FollowupAsync(SpinResultDisplay(game.Enemy, false), embed: enemySpinEmbed.Build(), components: components?.Build(), ephemeral: true));
             
             enemySpinEmbed = new EmbedBuilder()
                 .WithDescription($"{selfPlayer.PlayerName}'s Spin");
-            await game.LastInteraction.FollowupAsync(SpinResultDisplay(game.Self, false), embed: enemySpinEmbed.Build(), components: components?.Build(), ephemeral: true);
+            await CatchAndContinue(async () => await game.LastInteraction.FollowupAsync(SpinResultDisplay(game.Self, false), embed: enemySpinEmbed.Build(), components: components?.Build(), ephemeral: true));
 
             // Display the winner if the game ended
             if (frontend.GameOver) {
@@ -229,9 +237,9 @@ namespace WheelsGodot
                 var gameOverEmbed = new EmbedBuilder()
                     .WithTitle("Game Over")
                     .WithDescription(frontend.Winner == null ? "It's a tie!" : $"{((DiscordFrontendPlayer)frontend.Winner).PlayerName} wins!");
-                await component.FollowupAsync(embed: gameOverEmbed.Build());
+                await CatchAndContinue(async () => await component.FollowupAsync(embed: gameOverEmbed.Build()));
                 if (component.ChannelId != game.LastInteraction.ChannelId) {
-                    await game.LastInteraction.FollowupAsync(embed: gameOverEmbed.Build());
+                    await CatchAndContinue(async () => await game.LastInteraction.FollowupAsync(embed: gameOverEmbed.Build()));
                 }
             }
         }
@@ -298,19 +306,19 @@ namespace WheelsGodot
         private async Task LockWheel(SocketMessageComponent component) {
             var player = ongoingGames[component.User.Id].Self;
             player.Wheels[int.Parse(component.Data.CustomId.Split(',')[1])].Locked = true;
-            await component.UpdateAsync((msg) => {
+            await CatchAndContinue(async () => await component.UpdateAsync((msg) => {
                 msg.Content = SpinResultDisplay(player);
                 msg.Components = BuildSpinterface(player);
-            });
+            }));
         }
 
         private async Task UnlockWheel(SocketMessageComponent component) {
             var player = ongoingGames[component.User.Id].Self;
             player.Wheels[int.Parse(component.Data.CustomId.Split(',')[1])].Locked = false;
-            await component.UpdateAsync((msg) => {
+            await CatchAndContinue(async () => await component.UpdateAsync((msg) => {
                 msg.Content = SpinResultDisplay(player);
                 msg.Components = BuildSpinterface(player);
-            });
+            }));
         }
 
         private async Task HandleStartCommand(SocketSlashCommand command) {
@@ -325,20 +333,20 @@ namespace WheelsGodot
                 var inProgressEmbed = new EmbedBuilder()
                     .WithDescription(ongoing.AcceptedInvite ? "You already have a game in progress!\nWould you like to forfeit it and send a new invite?"
                         : $"You already have a pending invite!\nWould you like to {(ongoing.SelfIsPlayer1 ? "cancel" : "decline")} it and send a new invite?");
-                await command.RespondAsync(embed: inProgressEmbed.Build(), components: yesNoComponents.Build(), ephemeral: true);
+                await CatchAndContinue(async () => await command.RespondAsync(embed: inProgressEmbed.Build(), components: yesNoComponents.Build(), ephemeral: true));
 
                 inviteIfCancel[command.User.Id] = opponentUser;
                 return;
             }
             if (opponentUser.Id == command.User.Id) {
                 var selfChallengeEmbed = new EmbedBuilder().WithDescription("You can't challenge yourself!");
-                await command.RespondAsync(embed: selfChallengeEmbed.Build(), ephemeral: true);
+                await CatchAndContinue(async () => await command.RespondAsync(embed: selfChallengeEmbed.Build(), ephemeral: true));
                 return;
             }
             if (ongoingGames.TryGetValue(opponentUser.Id, out DiscordMatch enemyGame)) {
                 var inProgressEmbed = new EmbedBuilder()
                     .WithDescription($"That player already has a {(enemyGame.AcceptedInvite ? "game in progress" : "pending invite")}!");
-                await command.RespondAsync(embed: inProgressEmbed.Build(), ephemeral: true);
+                await CatchAndContinue(async () => await command.RespondAsync(embed: inProgressEmbed.Build(), ephemeral: true));
                 return;
             }
 
@@ -347,9 +355,9 @@ namespace WheelsGodot
             var embed = new EmbedBuilder()
                 .WithDescription($"Waiting for {opponentUser.Mention} to accept using the /accept command");
 
-            await command.RespondAsync(embed: embed.Build(), ephemeral: true);
-            await opponentUser.SendMessageAsync(embed: new EmbedBuilder()
-                .WithDescription($"You have been challenged to a game of Wheels by {command.User.Mention}! Use the /accept command in a channel of your choice to accept the challenge.").Build());
+            await CatchAndContinue(async () => await command.RespondAsync(embed: embed.Build(), ephemeral: true));
+            await CatchAndContinue(async () => await opponentUser.SendMessageAsync(embed: new EmbedBuilder()
+                .WithDescription($"You have been challenged to a game of Wheels by {command.User.Mention}! Use the /accept command in a channel of your choice to accept the challenge.").Build()));
         }
 
         private void InitGame(SocketUser player1, SocketUser player2, SocketInteraction lastInteraction) {
@@ -383,14 +391,14 @@ namespace WheelsGodot
             if (!ongoingGames.ContainsKey(command.User.Id)) {
                 var noInviteEmbed = new EmbedBuilder()
                     .WithDescription("You have no pending invite!");
-                await command.RespondAsync(embed: noInviteEmbed.Build(), ephemeral: true);
+                await CatchAndContinue(async () => await command.RespondAsync(embed: noInviteEmbed.Build(), ephemeral: true));
                 return;
             }
             var game = ongoingGames[command.User.Id];
             if (game.SelfIsPlayer1) {
                 var noInviteEmbed = new EmbedBuilder()
                     .WithDescription("You have no pending invite!");
-                await command.RespondAsync(embed: noInviteEmbed.Build(), ephemeral: true);
+                await CatchAndContinue(async () => await command.RespondAsync(embed: noInviteEmbed.Build(), ephemeral: true));
                 return;
             }
 
@@ -408,8 +416,8 @@ namespace WheelsGodot
             var embed = new EmbedBuilder()
                 .WithDescription("Choose a hero for slot A");
 
-            await command.RespondAsync(embed: embed.Build(), components: components.Build(), ephemeral: true);
-            await game.LastInteraction.FollowupAsync(embed: embed.Build(), components: components.Build(), ephemeral: true);
+            await CatchAndContinue(async () => await command.RespondAsync(embed: embed.Build(), components: components.Build(), ephemeral: true));
+            await CatchAndContinue(async () => await game.LastInteraction.FollowupAsync(embed: embed.Build(), components: components.Build(), ephemeral: true));
         }
 
         private async Task HandleHeroASelectMenu(SocketMessageComponent component) {
@@ -431,8 +439,8 @@ namespace WheelsGodot
                 .WithTitle($"{component.Data.Values.First()} selected")
                 .WithDescription("Choose a hero for slot B");
 
-            await RemovePreviousComponents(component);
-            await component.FollowupAsync(embed: embed.Build(), components: components.Build(), ephemeral: true);
+            await CatchAndContinue(async () => await RemovePreviousComponents(component));
+            await CatchAndContinue(async () => await component.FollowupAsync(embed: embed.Build(), components: components.Build(), ephemeral: true));
         }
 
         private async Task HandleHeroBSelectMenu(SocketMessageComponent component) {
@@ -454,15 +462,15 @@ namespace WheelsGodot
                 embed = AddPlayersStatus(embed, game);
             }
 
-            await RemovePreviousComponents(component);
-            await component.FollowupAsync(embed: embed.Build(), components: game.OpponentReady ? components.Build() : null, ephemeral: true);
+            await CatchAndContinue(async () => await RemovePreviousComponents(component));
+            await CatchAndContinue(async () => await component.FollowupAsync(embed: embed.Build(), components: game.OpponentReady ? components.Build() : null, ephemeral: true));
 
             if (game.OpponentReady) {
                 game.OpponentReady = false;
                 var startEmbed = AddPlayersStatus(new EmbedBuilder()
                     .WithDescription($"Your opponent chose {game.Enemy.Heroes[0].Name} and {game.Enemy.Heroes[1].Name}.\n\nBEGIN!"),
                     game);
-                await game.LastInteraction.FollowupAsync(embed: startEmbed.Build(), components: components.Build(), ephemeral: true);
+                await CatchAndContinue(async () => await game.LastInteraction.FollowupAsync(embed: startEmbed.Build(), components: components.Build(), ephemeral: true));
             } else {
                 var enemyGame = ongoingGames[game.EnemyUser.Id];
                 enemyGame.LastInteraction = component;
