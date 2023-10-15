@@ -323,6 +323,13 @@ namespace WheelsGodot
 
         private async Task HandleStartCommand(SocketSlashCommand command) {
             var opponentUser = command.Data.Options.First(o => o.Name == "opponent").Value as SocketUser;
+            if (opponentUser.IsBot) {
+                await CatchAndContinue(async () => await command.RespondAsync(
+                    embed: new EmbedBuilder()
+                        .WithDescription("You can't play against a bot!").Build()
+                        ));
+                return;
+            }
             if (ongoingGames.TryGetValue(command.User.Id, out DiscordMatch ongoing)) {
                 var yesNoComponents = new ComponentBuilder()
                     .WithButton(new ButtonBuilder()
@@ -388,17 +395,21 @@ namespace WheelsGodot
         }
 
         private async Task HandleAcceptCommand(SocketSlashCommand command) {
-            if (!ongoingGames.ContainsKey(command.User.Id)) {
-                var noInviteEmbed = new EmbedBuilder()
+            var noInviteEmbed = new EmbedBuilder()
                     .WithDescription("You have no pending invite!");
+            if (!ongoingGames.ContainsKey(command.User.Id)) {
                 await CatchAndContinue(async () => await command.RespondAsync(embed: noInviteEmbed.Build(), ephemeral: true));
                 return;
             }
             var game = ongoingGames[command.User.Id];
             if (game.SelfIsPlayer1) {
-                var noInviteEmbed = new EmbedBuilder()
-                    .WithDescription("You have no pending invite!");
                 await CatchAndContinue(async () => await command.RespondAsync(embed: noInviteEmbed.Build(), ephemeral: true));
+                return;
+            }
+            if (game.AcceptedInvite) {
+                var alreadyAcceptedEmbed = new EmbedBuilder()
+                    .WithDescription("You are already in a game!");
+                await CatchAndContinue(async () => await command.RespondAsync(embed: alreadyAcceptedEmbed.Build(), ephemeral: true));
                 return;
             }
 
@@ -468,7 +479,7 @@ namespace WheelsGodot
             if (game.OpponentReady) {
                 game.OpponentReady = false;
                 var startEmbed = AddPlayersStatus(new EmbedBuilder()
-                    .WithDescription($"Your opponent chose {game.Enemy.Heroes[0].Name} and {game.Enemy.Heroes[1].Name}.\n\nBEGIN!"),
+                    .WithDescription($"Your opponent chose {game.Self.Heroes[0].Name} and {game.Self.Heroes[1].Name}.\n\nBEGIN!"),
                     game);
                 await CatchAndContinue(async () => await game.LastInteraction.FollowupAsync(embed: startEmbed.Build(), components: components.Build(), ephemeral: true));
             } else {
