@@ -3,3 +3,7 @@
 
 .vs/
 config/
+
+run.exe
+run.x86_64
+GodotSharp/
