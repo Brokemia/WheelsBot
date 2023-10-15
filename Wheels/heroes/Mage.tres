@@ -63,4 +63,5 @@ Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_cy2k
 
 [resource]
 script = ExtResource("1_fwanx")
+Name = "Mage"
 Levels = [SubResource("Resource_77n0l"), SubResource("Resource_uuyq8"), SubResource("Resource_mlbjy")]

@@ -82,7 +82,6 @@ namespace WheelsGodot {
 
         public void AddHero(string heroName) {
             var heroInstance = new HeroInstance {
-                Name = heroName,
                 Hero = GetHero(heroName),
                 Index = Heroes.Count
             };
@@ -90,7 +89,7 @@ namespace WheelsGodot {
         }
 
         public bool HasHero(string heroName) {
-            return Heroes.Any(hero => hero.Name == heroName);
+            return Heroes.Any(hero => hero.Hero.Name == heroName);
         }
     }
 }

@@ -52,4 +52,5 @@ Actions = Array[Object]([SubResource("Resource_d52bv"), SubResource("Resource_yb
 
 [resource]
 script = ExtResource("1_nkhve")
+Name = "Priest"
 Levels = Array[Object]([SubResource("Resource_heshg"), SubResource("Resource_7clt3"), SubResource("Resource_7ggc6")])

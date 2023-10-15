@@ -11,7 +11,7 @@ namespace WheelsGodot.discord {
         public List<string> RunningLog { get; set; } = new();
 
         private string HeroIdentifier(HeroInstance hero) {
-            return $"{Emojis.HeroIcons[hero.Index]} {hero.Name}";
+            return $"{Emojis.HeroIcons[hero.Index]} {hero.Hero.Name}";
         }
 
         private void AddLog(string log) {

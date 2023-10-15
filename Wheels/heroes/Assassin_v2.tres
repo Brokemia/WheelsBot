@@ -1,59 +1,59 @@
-[gd_resource type="Resource" script_class="Hero" load_steps=14 format=3 uid="uid://c0oa60pxu5vmb"]
+[gd_resource type="Resource" script_class="Hero" load_steps=14 format=3 uid="uid://crdv1l3fcgspg"]
 
-[ext_resource type="Script" path="res://actions/ActionDelay.cs" id="1_moobf"]
-[ext_resource type="Script" path="res://heroes/Hero.cs" id="1_rw8sm"]
-[ext_resource type="Script" path="res://actions/ActionAssassinate.cs" id="2_fukgf"]
-[ext_resource type="Script" path="res://heroes/HeroLevel.cs" id="3_xl4ya"]
+[ext_resource type="Script" path="res://actions/ActionDelay.cs" id="1_fi0y6"]
+[ext_resource type="Script" path="res://actions/ActionAssassinate.cs" id="2_w1skd"]
+[ext_resource type="Script" path="res://heroes/HeroLevel.cs" id="3_xhd03"]
+[ext_resource type="Script" path="res://heroes/Hero.cs" id="4_q8h4y"]
 
 [sub_resource type="Resource" id="Resource_7xxhy"]
-script = ExtResource("1_moobf")
+script = ExtResource("1_fi0y6")
 Target = "Closest"
 Amount = 1
 
 [sub_resource type="Resource" id="Resource_gp7gv"]
-script = ExtResource("2_fukgf")
+script = ExtResource("2_w1skd")
 Power = 1
 
 [sub_resource type="Resource" id="Resource_f667w"]
-script = ExtResource("3_xl4ya")
-EnergyNeeded = 3
+script = ExtResource("3_xhd03")
+EnergyNeeded = 4
 Priority = -1
 ImmuneTo = PackedStringArray("Delay")
 Actions = Array[Object]([SubResource("Resource_7xxhy"), SubResource("Resource_gp7gv")])
 
 [sub_resource type="Resource" id="Resource_kleav"]
-script = ExtResource("1_moobf")
+script = ExtResource("1_fi0y6")
 Target = "Closest"
 Amount = 1
 
 [sub_resource type="Resource" id="Resource_f841r"]
-script = ExtResource("2_fukgf")
+script = ExtResource("2_w1skd")
 Power = 2
 
 [sub_resource type="Resource" id="Resource_l61d1"]
-script = ExtResource("3_xl4ya")
-EnergyNeeded = 3
+script = ExtResource("3_xhd03")
+EnergyNeeded = 4
 Priority = -1
 ImmuneTo = PackedStringArray("Delay")
 Actions = Array[Object]([SubResource("Resource_kleav"), SubResource("Resource_f841r")])
 
 [sub_resource type="Resource" id="Resource_mtwc0"]
-script = ExtResource("1_moobf")
+script = ExtResource("1_fi0y6")
 Target = "Closest"
 Amount = 2
 
 [sub_resource type="Resource" id="Resource_xunqv"]
-script = ExtResource("2_fukgf")
+script = ExtResource("2_w1skd")
 Power = 2
 
 [sub_resource type="Resource" id="Resource_eeke3"]
-script = ExtResource("3_xl4ya")
-EnergyNeeded = 3
+script = ExtResource("3_xhd03")
+EnergyNeeded = 4
 Priority = -1
 ImmuneTo = PackedStringArray("Delay")
 Actions = Array[Object]([SubResource("Resource_mtwc0"), SubResource("Resource_xunqv")])
 
 [resource]
-script = ExtResource("1_rw8sm")
+script = ExtResource("4_q8h4y")
 Name = "Assassin"
 Levels = Array[Object]([SubResource("Resource_f667w"), SubResource("Resource_l61d1"), SubResource("Resource_eeke3")])

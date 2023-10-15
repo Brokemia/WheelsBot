@@ -9,6 +9,9 @@ namespace WheelsGodot.heroes {
     [GlobalClass]
     public partial class Hero : Resource {
         [Export]
+        public string Name { get; set; }
+
+        [Export]
         public HeroLevel[] Levels { get; set; }
     }
 }

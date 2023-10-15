@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Rules" load_steps=2 format=3 uid="uid://3tg0dxml8bn7"]
+
+[ext_resource type="Script" path="res://Rules.cs" id="1_yj8kk"]
+
+[resource]
+script = ExtResource("1_yj8kk")
+Description = ""
+AvailableHeroes = Array[String](["Warrior", "Mage", "Archer", "Engineer", "Assassin_v2", "Priest"])

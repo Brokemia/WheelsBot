@@ -12,8 +12,6 @@ namespace WheelsGodot {
         public const int MAX_LEVEL = 2;
         
         public int Index { get; set; }
-
-        public string Name { get; set; }
         
         public Hero Hero { get; set; }
 
