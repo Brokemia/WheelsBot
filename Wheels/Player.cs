@@ -13,12 +13,25 @@ namespace WheelsGodot {
         public const int BULWARK_MAX = 5;
 
         public const int CROWN_START = 10;
+        public const int CROWN_MAX = 12;
 
         public List<HeroInstance> Heroes { get; set; } = new();
         
         public int Bulwark { get; set; }
 
-        public int Crown { get; set; } = CROWN_START;
+        private int crown = CROWN_START;
+
+        public int Crown {
+            get => crown;
+            set {
+                crown = value;
+                if (crown > CROWN_MAX) {
+                    crown = CROWN_MAX;
+                } else if (crown < 0) {
+                    crown = 0;
+                }
+            }
+        }
 
 
         public int Spins { get; set; }
@@ -63,9 +76,6 @@ namespace WheelsGodot {
 
         public void DamageCrown(int amount) {
             Crown -= amount;
-            if (Crown < 0) {
-                Crown = 0;
-            }
         }
 
         public void Reset() {
@@ -76,20 +86,16 @@ namespace WheelsGodot {
             Spins = 0;
         }
 
-        private Hero GetHero(string name) {
-            return GD.Load<Hero>($"res://heroes/{name}.tres");
-        }
-
-        public void AddHero(string heroName) {
+        public void AddHero(Hero hero) {
             var heroInstance = new HeroInstance {
-                Hero = GetHero(heroName),
+                Hero = hero,
                 Index = Heroes.Count
             };
             Heroes.Add(heroInstance);
         }
 
-        public bool HasHero(string heroName) {
-            return Heroes.Any(hero => hero.Hero.Name == heroName);
+        public bool HasHero(Hero hero) {
+            return Heroes.Any(h => h.Hero.ResourcePath == hero.ResourcePath);
         }
     }
 }

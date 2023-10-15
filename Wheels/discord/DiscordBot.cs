@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WheelsGodot.discord;
+using WheelsGodot.heroes;
 
 namespace WheelsGodot
 {
@@ -442,7 +443,7 @@ namespace WheelsGodot
                     .WithCustomId("heroA");
 
             foreach (var hero in game.Board.Rules.AvailableHeroes) {
-                selectMenu = selectMenu.AddOption(new SelectMenuOptionBuilder().WithLabel(hero).WithValue(hero));
+                selectMenu = selectMenu.AddOption(new SelectMenuOptionBuilder().WithLabel(GetHero(hero).Name).WithValue(hero));
             }
 
             var components = new ComponentBuilder()
@@ -456,14 +457,15 @@ namespace WheelsGodot
 
         private async Task HandleHeroASelectMenu(SocketMessageComponent component) {
             var game = ongoingGames[component.User.Id];
-            game.Self.AddHero(component.Data.Values.First());
+            game.Self.AddHero(GetHero(component.Data.Values.First()));
 
             var selectMenu = new SelectMenuBuilder()
                     .WithCustomId("heroB");
 
             foreach (var hero in game.Board.Rules.AvailableHeroes) {
-                if (!game.Self.HasHero(hero)) {
-                    selectMenu = selectMenu.AddOption(new SelectMenuOptionBuilder().WithLabel(hero).WithValue(hero));
+                var h = GetHero(hero);
+                if (!game.Self.HasHero(h)) {
+                    selectMenu = selectMenu.AddOption(new SelectMenuOptionBuilder().WithLabel(h.Name).WithValue(hero));
                 }
             }
 
@@ -479,7 +481,7 @@ namespace WheelsGodot
 
         private async Task HandleHeroBSelectMenu(SocketMessageComponent component) {
             var game = ongoingGames[component.User.Id];
-            game.Self.AddHero(component.Data.Values.First());
+            game.Self.AddHero(GetHero(component.Data.Values.First()));
 
             var components = new ComponentBuilder()
                 .WithButton(
@@ -510,6 +512,17 @@ namespace WheelsGodot
                 enemyGame.LastInteraction = component;
                 enemyGame.OpponentReady = true;
             }
+        }
+
+        private Dictionary<string, Hero> heroCache = new();
+
+        private Hero GetHero(string name) {
+            if (heroCache.TryGetValue(name, out var hero)) {
+                return hero;
+            }
+            hero = GD.Load<Hero>($"res://heroes/{name}.tres");
+            heroCache[name] = hero;
+            return hero;
         }
     }
 }
