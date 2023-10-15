@@ -14,6 +14,8 @@ namespace WheelsGodot
 {
     public partial class DiscordBot : Node {
 
+        private const string AnalyticsFile = "user://analytics.csv";
+
         private readonly ConfigFile Config;
 
         private DiscordSocketClient client;
@@ -249,7 +251,7 @@ namespace WheelsGodot
         }
 
         private void SaveGameResults(DiscordMatch game) {
-            using var file = FileAccess.Open("user://analytics.csv", FileAccess.ModeFlags.ReadWrite);
+            using var file = FileAccess.Open(AnalyticsFile, FileAccess.FileExists(AnalyticsFile) ? FileAccess.ModeFlags.ReadWrite : FileAccess.ModeFlags.Write);
             file.SeekEnd();
             file.StoreCsvLine(new string[] {
                 DateTime.UtcNow.ToString(),
