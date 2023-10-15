@@ -346,16 +346,16 @@ namespace WheelsGodot
             if (opponentUser.IsBot) {
                 await CatchAndContinue(async () => await command.RespondAsync(
                     embed: new EmbedBuilder()
-                        .WithDescription("You can't play against a bot!").Build()
-                        ));
+                        .WithDescription("You can't play against a bot!").Build(),
+                    ephemeral: true));
                 return;
             }
             var ruleset = GD.Load<Rules>((command.Data.Options.FirstOrDefault(o => o.Name == "ruleset")?.Value ?? "default") as string);
             if (ruleset == null) {
                 await CatchAndContinue(async () => await command.RespondAsync(
                     embed: new EmbedBuilder()
-                        .WithDescription("That ruleset doesn't exist!").Build()
-                    ));
+                        .WithDescription("That ruleset doesn't exist!").Build(),
+                    ephemeral: true));
                 return;
             }
             if (ongoingGames.TryGetValue(command.User.Id, out DiscordMatch ongoing)) {
