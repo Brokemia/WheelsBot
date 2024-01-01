@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WheelsGodot.actions {
     [GlobalClass]
-    public partial class ActionAttack : Action {
+    public partial class ActionAttack : WheelsAction {
         [Export]
         public int Height { get; set; }
 
@@ -21,7 +21,7 @@ namespace WheelsGodot.actions {
             Type = "Attack";
         }
 
-        public override void Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+        public override bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
             var other = board.Other(player);
             if (other.Bulwark >= Height) {
                 other.DamageBulwark(BulwarkPower);
@@ -30,6 +30,7 @@ namespace WheelsGodot.actions {
                 other.DamageCrown(CrownPower);
                 frontend.AttackEnemyCrown(hero, CrownPower, other.Crown);
             }
+            return true;
         }
     }
 }

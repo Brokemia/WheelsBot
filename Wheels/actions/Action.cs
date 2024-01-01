@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace WheelsGodot.actions {
     [GlobalClass]
-    public abstract partial class Action : Resource {
+    public abstract partial class WheelsAction : Resource {
         public string Type { get; set; }
 
-        public abstract void Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend);
+        // Return true if this action executed normally, and false if this hero should stall until all other heroes have gone
+        public abstract bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend);
     }
 }

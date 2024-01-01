@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WheelsGodot.actions {
     [GlobalClass]
-    public partial class ActionFortify : Action {
+    public partial class ActionFortify : WheelsAction {
         [Export]
         public int Amount { get; set; }
 
@@ -15,9 +15,10 @@ namespace WheelsGodot.actions {
             Type = "Fortify";
         }
 
-        public override void Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+        public override bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
             player.GrowBulwark(Amount);
             frontend.HeroGrowBulwark(hero, Amount);
+            return true;
         }
     }
 }

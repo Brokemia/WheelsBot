@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://uv8qwgsar23s"]
+
+[ext_resource type="Script" path="res://frontend/test/TestHeroControl.cs" id="1_coylv"]
+
+[node name="Hero" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_coylv")
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+text = "Name"
+
+[node name="Energy" type="Label" parent="."]
+layout_mode = 2
+text = "0/4 Energy"
+
+[node name="XP" type="Label" parent="."]
+layout_mode = 2
+text = "0/6 XP"

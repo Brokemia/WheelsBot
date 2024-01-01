@@ -14,6 +14,6 @@ namespace WheelsGodot.heroes {
         public string[] ImmuneTo { get; set; }
 
         [Export]
-        public Action[] Actions { get; set; }
+        public WheelsAction[] Actions { get; set; }
     }
 }

@@ -1,0 +1,70 @@
+[gd_scene load_steps=2 format=3 uid="uid://cuoc4nbd0l5ma"]
+
+[ext_resource type="Script" path="res://frontend/test/TestFrontendPlayer.cs" id="1_1pqte"]
+
+[node name="TestPlayer" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1pqte")
+SlotPathFormat = "VBoxContainer/WheelSelector/Slot{0}"
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.0859375
+anchor_bottom = 0.0354938
+text = "Player Name"
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Heroes" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HeroSelect" type="OptionButton" parent="VBoxContainer/Heroes"]
+layout_mode = 2
+
+[node name="Add" type="Button" parent="VBoxContainer/Heroes"]
+layout_mode = 2
+text = "Add"
+
+[node name="WheelSelector" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Slot1" type="OptionButton" parent="VBoxContainer/WheelSelector"]
+layout_mode = 2
+
+[node name="Slot2" type="OptionButton" parent="VBoxContainer/WheelSelector"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = ""
+popup/item_0/id = 0
+
+[node name="Slot3" type="OptionButton" parent="VBoxContainer/WheelSelector"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = ""
+popup/item_0/id = 0
+
+[node name="Slot4" type="OptionButton" parent="VBoxContainer/WheelSelector"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = ""
+popup/item_0/id = 0
+
+[node name="Slot5" type="OptionButton" parent="VBoxContainer/WheelSelector"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = ""
+popup/item_0/id = 0

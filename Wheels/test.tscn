@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://b17dgg73is47f"]
+
+[ext_resource type="Script" path="res://frontend/test/TestScene.cs" id="1_4ekcx"]
+[ext_resource type="PackedScene" uid="uid://cuoc4nbd0l5ma" path="res://frontend/test/test_player.tscn" id="1_fjn73"]
+
+[sub_resource type="Theme" id="Theme_s1i02"]
+
+[node name="Test" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_s1i02")
+script = ExtResource("1_4ekcx")
+Player1Path = NodePath("HSplitContainer/Control/Player1")
+Player2Path = NodePath("HSplitContainer/Control/Player2")
+RulesetSelectPath = NodePath("TopBar/Ruleset")
+LogPath = NodePath("HSplitContainer/Log")
+
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_bottom = 30.0
+
+[node name="Reset" type="Button" parent="TopBar"]
+layout_mode = 2
+text = "Reset"
+
+[node name="Ruleset" type="OptionButton" parent="TopBar"]
+layout_mode = 2
+
+[node name="Act" type="Button" parent="TopBar"]
+layout_mode = 2
+text = "Act"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 850
+
+[node name="Control" type="VSplitContainer" parent="HSplitContainer"]
+layout_mode = 2
+split_offset = 300
+
+[node name="Player1" parent="HSplitContainer/Control" instance=ExtResource("1_fjn73")]
+layout_mode = 2
+PlayerName = "Player 1"
+
+[node name="Player2" parent="HSplitContainer/Control" instance=ExtResource("1_fjn73")]
+layout_mode = 2
+PlayerName = "Player 2"
+
+[node name="Log" type="Label" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Log Goes Here"
+
+[connection signal="pressed" from="TopBar/Act" to="." method="OnActPressed"]

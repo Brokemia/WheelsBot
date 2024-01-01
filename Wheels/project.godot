@@ -12,7 +12,7 @@ config_version=5
 
 config/name="WheelsGodot"
 run/main_scene="res://discord_bot.tscn"
-config/features=PackedStringArray("4.1", "C#", "Forward Plus")
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -22,3 +22,7 @@ Controller="*res://Controller.cs"
 [dotnet]
 
 project/assembly_name="WheelsGodot"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"

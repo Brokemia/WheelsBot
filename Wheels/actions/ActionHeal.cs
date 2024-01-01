@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WheelsGodot.actions {
     [GlobalClass]
-    public partial class ActionHeal : Action {
+    public partial class ActionHeal : WheelsAction {
         [Export]
         public int Amount { get; set; }
 
@@ -15,9 +15,10 @@ namespace WheelsGodot.actions {
             Type = "Heal";
         }
 
-        public override void Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+        public override bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
             player.Crown += Amount;
             frontend.HealCrown(hero, Amount);
+            return true;
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WheelsGodot.actions {
     [GlobalClass]
-    public partial class ActionAssassinate : Action {
+    public partial class ActionAssassinate : WheelsAction {
         [Export]
         public int Power { get; set; }
 
@@ -15,10 +15,11 @@ namespace WheelsGodot.actions {
             Type = "Assassinate";
         }
 
-        public override void Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+        public override bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
             var other = board.Other(player);
             other.DamageCrown(Power);
             frontend.AttackEnemyCrown(hero, Power, other.Crown);
+            return true;
         }
     }
 }

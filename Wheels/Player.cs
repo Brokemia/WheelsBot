@@ -33,7 +33,6 @@ namespace WheelsGodot {
             }
         }
 
-
         public int Spins { get; set; }
 
         public List<Wheel> Wheels { get; set; } = LoadWheels("Wheel0", "Wheel1", "Wheel2", "Wheel3", "Platinum");

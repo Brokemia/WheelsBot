@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WheelsGodot.actions {
     [GlobalClass]
-    public partial class ActionDelay : Action {
+    public partial class ActionDelay : WheelsAction {
         [Export(PropertyHint.Enum, "Closest")]
         public string Target { get; set; } = "Closest";
 
@@ -18,7 +18,7 @@ namespace WheelsGodot.actions {
             Type = "Delay";
         }
 
-        public override void Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+        public override bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
             var other = board.Other(player);
             var valid = other.Heroes.Where(h => !h.HeroLevel.ImmuneTo.Contains("Delay"));
 
@@ -31,6 +31,7 @@ namespace WheelsGodot.actions {
                 chosen.Energy -= Amount;
                 frontend.DelayEnemyHero(hero, chosen, Amount);
             }
+            return true;
         }
     }
 }

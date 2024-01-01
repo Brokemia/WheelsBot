@@ -1,13 +1,13 @@
-﻿using Godot;
+using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WheelsGodot.discord
+namespace WheelsGodot.frontend.test
 {
-    public class DiscordFrontend : WheelsFrontend<DiscordFrontendPlayer>
+    public class TestFrontend : WheelsFrontend<TestFrontendPlayer>
     {
         public List<string> CombinedLog => PhaseLogs.SelectMany(x => x.Logs).Concat(Log).ToList();
 
@@ -40,8 +40,7 @@ namespace WheelsGodot.discord
             EndPhase();
         }
 
-        public override void SetPlayerFrontend(Player player, DiscordFrontendPlayer frontend)
-        {
+        public override void SetPlayerFrontend(Player player, TestFrontendPlayer frontend) {
             frontend.RunningLog = Log;
             base.SetPlayerFrontend(player, frontend);
         }
