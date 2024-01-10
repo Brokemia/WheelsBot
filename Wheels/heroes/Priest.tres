@@ -16,7 +16,7 @@ Amount = 2
 [sub_resource type="Resource" id="Resource_heshg"]
 script = ExtResource("3_70xqx")
 EnergyNeeded = 4
-Priority = 0
+Priority = 9
 ImmuneTo = PackedStringArray()
 Actions = Array[Object]([SubResource("Resource_xmovv"), SubResource("Resource_c1ana")])
 
@@ -31,7 +31,7 @@ Amount = 2
 [sub_resource type="Resource" id="Resource_7clt3"]
 script = ExtResource("3_70xqx")
 EnergyNeeded = 3
-Priority = 0
+Priority = 9
 ImmuneTo = PackedStringArray()
 Actions = Array[Object]([SubResource("Resource_nwxcb"), SubResource("Resource_351d5")])
 
@@ -46,7 +46,7 @@ Amount = 3
 [sub_resource type="Resource" id="Resource_7ggc6"]
 script = ExtResource("3_70xqx")
 EnergyNeeded = 3
-Priority = 0
+Priority = 9
 ImmuneTo = PackedStringArray()
 Actions = Array[Object]([SubResource("Resource_d52bv"), SubResource("Resource_ybrsd")])
 

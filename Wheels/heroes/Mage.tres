@@ -19,9 +19,9 @@ BulwarkPower = 2
 [sub_resource type="Resource" id="Resource_77n0l"]
 script = ExtResource("2_gmo2e")
 EnergyNeeded = 5
-Priority = 0
+Priority = 10
 ImmuneTo = PackedStringArray()
-Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_iphwf"), SubResource("Resource_elau3")])
+Actions = [SubResource("Resource_iphwf"), SubResource("Resource_elau3")]
 
 [sub_resource type="Resource" id="Resource_v3k8c"]
 script = ExtResource("1_jtbhr")
@@ -38,9 +38,9 @@ BulwarkPower = 3
 [sub_resource type="Resource" id="Resource_uuyq8"]
 script = ExtResource("2_gmo2e")
 EnergyNeeded = 4
-Priority = 0
+Priority = 10
 ImmuneTo = PackedStringArray()
-Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_v3k8c"), SubResource("Resource_yds45")])
+Actions = [SubResource("Resource_v3k8c"), SubResource("Resource_yds45")]
 
 [sub_resource type="Resource" id="Resource_cy2kl"]
 script = ExtResource("1_jtbhr")
@@ -57,9 +57,9 @@ BulwarkPower = 5
 [sub_resource type="Resource" id="Resource_mlbjy"]
 script = ExtResource("2_gmo2e")
 EnergyNeeded = 4
-Priority = 0
+Priority = 10
 ImmuneTo = PackedStringArray()
-Actions = Array[Resource("res://actions/Action.cs")]([SubResource("Resource_cy2kl"), SubResource("Resource_uie7h")])
+Actions = [SubResource("Resource_cy2kl"), SubResource("Resource_uie7h")]
 
 [resource]
 script = ExtResource("1_fwanx")
