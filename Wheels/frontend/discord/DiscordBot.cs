@@ -21,6 +21,12 @@ namespace WheelsGodot
 
 		private readonly ConfigFile PersistentData;
 
+		private readonly Godot.Collections.Dictionary<string, int> defaultUserStats = new() {
+			{ "Wins", 0 },
+			{ "Losses", 0 },
+			{ "Ties", 0 }
+		};
+
 		private DiscordSocketClient client;
 
 		private Controller controller;
@@ -129,6 +135,11 @@ namespace WheelsGodot
 					.WithName("accept")
 					.WithDescription("Accept a challenge to play wheels")
 					.Build());
+				
+				await client.CreateGlobalApplicationCommandAsync(new SlashCommandBuilder()
+					.WithName("stats")
+					.WithDescription("Check your stats")
+					.Build());
 				// Using the ready event is a simple implementation for the sake of the example. Suitable for testing and development.
 				// For a production bot, it is recommended to only run the CreateGlobalApplicationCommandAsync() once for each command.
 			} catch (HttpException exception) {
@@ -146,6 +157,9 @@ namespace WheelsGodot
 				case "accept":
 					await HandleAcceptCommand(command);
 					break;
+				case "stats":
+					await HandleStatsCommand(command);
+					break;
 				default:
 					await command.RespondAsync($"Unknown command {command.Data.Name}");
 					break;
@@ -158,6 +172,17 @@ namespace WheelsGodot
 			});
 		}
 
+		private async Task HandleStatsCommand(SocketSlashCommand command) {
+			var stats = PersistentData.GetValue("leaderboard", command.User.Id.ToString(), defaultUserStats.Duplicate()).AsGodotDictionary<string, int>();
+
+			await command.RespondAsync(embed: new EmbedBuilder()
+				.WithTitle(command.User.GlobalName)
+				.AddField("Wins", stats["Wins"])
+				.AddField("Losses", stats["Losses"])
+				.AddField("Ties", stats["Ties"])
+				.Build());
+		}
+		
 		private async Task HandleCancelExistingGame(SocketMessageComponent component) {
 			var user = component.User;
 			var invite = inviteIfCancel[user.Id];
@@ -270,13 +295,8 @@ namespace WheelsGodot
 				game.Enemy.Bulwark.ToString(),
 				string.Join('-', game.Enemy.Heroes.Select(h => $"{h.Index};{h.Hero.ResourcePath};{h.Level};{h.XP};{h.Energy}")),
 			});
-			var defaultResults = new Godot.Collections.Dictionary<string, int>();
-			defaultResults["Wins"] = 0;
-			defaultResults["Losses"] = 0;
-			defaultResults["Ties"] = 0;
-			
-			var selfResults = PersistentData.GetValue("leaderboard", game.SelfUser.Id.ToString(), defaultResults.Duplicate()).AsGodotDictionary<string, int>();
-			var enemyResults = PersistentData.GetValue("leaderboard", game.EnemyUser.Id.ToString(), defaultResults.Duplicate()).AsGodotDictionary<string, int>();
+			var selfResults = PersistentData.GetValue("leaderboard", game.SelfUser.Id.ToString(), defaultUserStats.Duplicate()).AsGodotDictionary<string, int>();
+			var enemyResults = PersistentData.GetValue("leaderboard", game.EnemyUser.Id.ToString(), defaultUserStats.Duplicate()).AsGodotDictionary<string, int>();
 			
 			if (game.Self.Crown <= 0) {
 				if (game.Enemy.Crown <= 0) {
