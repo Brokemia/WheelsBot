@@ -165,20 +165,32 @@ public partial class Controller : Node
 		if (hero.Energy < hero.EnergyNeeded) {
 			yield return false;
 		}
+		bool gainedXP = false;
 		foreach (var action in hero.HeroLevel.Actions) {
 			while (!action.Act(board, player, hero, playerFrontend)) {
+				// This is so priest gains XP after heal but before energize, if waiting for another hero
+				if (!gainedXP) {
+                    GainAttackXP(board, player, hero, playerFrontend);
+                    gainedXP = true;
+                }
 				// Stall until this hero works right
 				yield return true;
 			}
 		}
 		hero.Energy = 0;
-		// XP from attacking
-		hero.XP += XP_FROM_ATTACK;
-		playerFrontend.AddXP(hero, XP_FROM_ATTACK);
+        if (!gainedXP) {
+			GainAttackXP(board, player, hero, playerFrontend);
+        }
 
-		LevelUpHero(board, player, hero, playerFrontend);
-		yield return false;
+        yield return false;
 	}
+
+	private void GainAttackXP(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+        hero.XP += XP_FROM_ATTACK;
+        frontend.AddXP(hero, XP_FROM_ATTACK);
+
+        LevelUpHero(board, player, hero, frontend);
+    }
 
 	private void EnqueueReady(PriorityQueue<IEnumerator<bool>, (int, int)> queue, Board board, Player player, WheelsFrontendPlayer playerFrontend) {
 		queue.EnqueueRange(GetReadyHeroes(player).Select(hero => 

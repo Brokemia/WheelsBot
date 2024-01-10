@@ -16,12 +16,13 @@ namespace WheelsGodot.actions {
         }
 
         public override bool Act(Board board, Player player, HeroInstance hero, WheelsFrontendPlayer frontend) {
+            // Wait until the other hero actually needs it
+            if (player.Heroes.Any(h => h != hero && h.Energy >= h.EnergyNeeded)) {
+                return false;
+            }
             foreach (HeroInstance h in player.Heroes) {
                 if (h == hero) continue;
-                // Wait until the other hero actually needs it
-                if (h.Energy >= h.EnergyNeeded) {
-                    return false;
-                }
+                
                 h.Energy += Amount;
                 frontend.HeroAddEnergy(hero, h, Amount);
             }
