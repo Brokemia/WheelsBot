@@ -15,8 +15,11 @@ namespace WheelsGodot
 	public partial class DiscordBot : Node {
 
 		private const string AnalyticsFile = "user://analytics.csv";
+		private const string PersistentDataFile = "user://persistent.cfg";
 
 		private readonly ConfigFile Config;
+
+		private readonly ConfigFile PersistentData;
 
 		private DiscordSocketClient client;
 
@@ -35,7 +38,46 @@ namespace WheelsGodot
 		public DiscordBot() {
 			Config = new ConfigFile();
 			Config.Load("res://config/auth.cfg");
-		}
+			PersistentData = new ConfigFile();
+			PersistentData.Load(PersistentDataFile);
+
+            using var file = FileAccess.Open(AnalyticsFile, FileAccess.FileExists(AnalyticsFile) ? FileAccess.ModeFlags.ReadWrite : FileAccess.ModeFlags.Write);
+            var defaultResults = new Godot.Collections.Dictionary<string, int>();
+            defaultResults["Wins"] = 0;
+            defaultResults["Losses"] = 0;
+            defaultResults["Ties"] = 0;
+            while (file.GetPosition() < file.GetLength()) {
+				var line = file.GetCsvLine();
+
+                var selfResults = PersistentData.GetValue("leaderboard", line[1], defaultResults.Duplicate()).AsGodotDictionary<string, int>();
+                var enemyResults = PersistentData.GetValue("leaderboard", line[2], defaultResults.Duplicate()).AsGodotDictionary<string, int>();
+
+				var selfCrown = int.Parse(line[4]);
+				var enemyCrown = int.Parse(line[7]);
+				
+                if (selfCrown <= 0) {
+                    if (enemyCrown <= 0) {
+                        selfResults["Ties"]++;
+                        enemyResults["Ties"]++;
+                    } else {
+                        selfResults["Losses"]++;
+                        enemyResults["Wins"]++;
+                    }
+                } else {
+                    if (enemyCrown <= 0) {
+                        selfResults["Wins"]++;
+                        enemyResults["Losses"]++;
+                    } else {
+                        selfResults["???"] = selfResults.GetValueOrDefault("???", 0) + 1;
+                        enemyResults["???"] = enemyResults.GetValueOrDefault("???", 0) + 1;
+                    }
+                }
+
+				PersistentData.SetValue("leaderboard", line[1], selfResults);
+				PersistentData.SetValue("leaderboard", line[2], enemyResults);
+            }
+            PersistentData.Save(PersistentDataFile);
+        }
 
 		public override void _Ready() {
 			base._Ready();
@@ -265,7 +307,37 @@ namespace WheelsGodot
 				game.Enemy.Bulwark.ToString(),
 				string.Join('-', game.Enemy.Heroes.Select(h => $"{h.Index};{h.Hero.ResourcePath};{h.Level};{h.XP};{h.Energy}")),
 			});
-		}
+			var defaultResults = new Godot.Collections.Dictionary<string, int>();
+			defaultResults["Wins"] = 0;
+			defaultResults["Losses"] = 0;
+			defaultResults["Ties"] = 0;
+			
+			var selfResults = PersistentData.GetValue("leaderboard", game.SelfUser.Id.ToString(), defaultResults.Duplicate()).AsGodotDictionary<string, int>();
+			var enemyResults = PersistentData.GetValue("leaderboard", game.EnemyUser.Id.ToString(), defaultResults.Duplicate()).AsGodotDictionary<string, int>();
+			
+			if (game.Self.Crown <= 0) {
+				if (game.Enemy.Crown <= 0) {
+                    selfResults["Ties"]++;
+                    enemyResults["Ties"]++;
+                } else {
+                    selfResults["Losses"]++;
+                    enemyResults["Wins"]++;
+                }
+            } else {
+                if (game.Enemy.Crown <= 0) {
+                    selfResults["Wins"]++;
+                    enemyResults["Losses"]++;
+                } else {
+                    selfResults["???"] = selfResults.GetValueOrDefault("???", 0) + 1;
+                    enemyResults["???"] = enemyResults.GetValueOrDefault("???", 0) + 1;
+                }
+            }
+
+            PersistentData.SetValue("leaderboard", game.SelfUser.Id.ToString(), selfResults);
+            PersistentData.SetValue("leaderboard", game.EnemyUser.Id.ToString(), enemyResults);
+
+            PersistentData.Save(PersistentDataFile);
+        }
 
 		private string SpinResultDisplay(Player player, bool includeLocks = true) {
 			var topRow = "";
