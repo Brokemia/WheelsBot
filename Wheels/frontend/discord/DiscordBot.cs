@@ -40,43 +40,6 @@ namespace WheelsGodot
 			Config.Load("res://config/auth.cfg");
 			PersistentData = new ConfigFile();
 			PersistentData.Load(PersistentDataFile);
-
-            using var file = FileAccess.Open(AnalyticsFile, FileAccess.FileExists(AnalyticsFile) ? FileAccess.ModeFlags.ReadWrite : FileAccess.ModeFlags.Write);
-            var defaultResults = new Godot.Collections.Dictionary<string, int>();
-            defaultResults["Wins"] = 0;
-            defaultResults["Losses"] = 0;
-            defaultResults["Ties"] = 0;
-            while (file.GetPosition() < file.GetLength()) {
-				var line = file.GetCsvLine();
-
-                var selfResults = PersistentData.GetValue("leaderboard", line[1], defaultResults.Duplicate()).AsGodotDictionary<string, int>();
-                var enemyResults = PersistentData.GetValue("leaderboard", line[2], defaultResults.Duplicate()).AsGodotDictionary<string, int>();
-
-				var selfCrown = int.Parse(line[4]);
-				var enemyCrown = int.Parse(line[7]);
-				
-                if (selfCrown <= 0) {
-                    if (enemyCrown <= 0) {
-                        selfResults["Ties"]++;
-                        enemyResults["Ties"]++;
-                    } else {
-                        selfResults["Losses"]++;
-                        enemyResults["Wins"]++;
-                    }
-                } else {
-                    if (enemyCrown <= 0) {
-                        selfResults["Wins"]++;
-                        enemyResults["Losses"]++;
-                    } else {
-                        selfResults["???"] = selfResults.GetValueOrDefault("???", 0) + 1;
-                        enemyResults["???"] = enemyResults.GetValueOrDefault("???", 0) + 1;
-                    }
-                }
-
-				PersistentData.SetValue("leaderboard", line[1], selfResults);
-				PersistentData.SetValue("leaderboard", line[2], enemyResults);
-            }
-            PersistentData.Save(PersistentDataFile);
         }
 
 		public override void _Ready() {
